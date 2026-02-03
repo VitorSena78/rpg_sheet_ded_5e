@@ -1,5 +1,8 @@
 import asyncio
-asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+import sys
+
+if sys.platform.startswith("win"):
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 from dotenv import load_dotenv
 import os
@@ -13,7 +16,7 @@ class Db:
         self.host = os.getenv('HOST')
         self.database = os.getenv('DATABASE')
         self.port = os.getenv('PORT')
-        self.user_db = os.getenv('USER')
+        self.user_db = os.getenv('DB_USER')
         self.password_db = os.getenv('PASSWORD')
         self.pool = None
             

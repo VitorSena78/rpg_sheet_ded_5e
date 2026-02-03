@@ -1,5 +1,8 @@
 import asyncio
-asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+import sys
+
+if sys.platform.startswith("win"):
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 from dotenv import load_dotenv
 import os
@@ -8,7 +11,7 @@ import psycopg_pool
 load_dotenv()
 
 async def open_pool():
-    conninfo = f'host={os.getenv("HOST")} dbname=postgres port={os.getenv("PORT")} user={os.getenv("USER")} password={os.getenv("PASSWORD")}'
+    conninfo = f'host={os.getenv("HOST")} dbname=postgres port={os.getenv("PORT")} user={os.getenv("DB_USER")} password={os.getenv("PASSWORD")}'
     pool = psycopg_pool.AsyncConnectionPool(conninfo=conninfo, open=False)
     await pool.open()
     await pool.wait()
@@ -41,7 +44,7 @@ async def create_database():
                 await pool.close()
 
 async def create_tables():
-    conninfo = f'host={os.getenv("HOST")} dbname={os.getenv("DATABASE")} port={os.getenv("PORT")} user={os.getenv("USER")} password={os.getenv("PASSWORD")}'
+    conninfo = f'host={os.getenv("HOST")} dbname={os.getenv("DATABASE")} port={os.getenv("PORT")} user={os.getenv("DB_USER")} password={os.getenv("PASSWORD")}'
     pool = psycopg_pool.AsyncConnectionPool(conninfo=conninfo, open=False)
     await pool.open()
     await pool.wait()
@@ -321,7 +324,7 @@ async def create_tables():
                 await pool.close()
         
 async def insert_default_values():
-    conninfo = f'host={os.getenv("HOST")} dbname={os.getenv("DATABASE")} port={os.getenv("PORT")} user={os.getenv("USER")} password={os.getenv("PASSWORD")}'
+    conninfo = f'host={os.getenv("HOST")} dbname={os.getenv("DATABASE")} port={os.getenv("PORT")} user={os.getenv("DB_USER")} password={os.getenv("PASSWORD")}'
     pool = psycopg_pool.AsyncConnectionPool(conninfo=conninfo, open=False)
     await pool.open()
     await pool.wait()
